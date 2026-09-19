@@ -3,7 +3,6 @@
 
 module tb ();
 
-    // DUT signals
     reg  [7:0] ui_in;
     wire [7:0] uo_out;
     reg  [7:0] uio_in;
@@ -13,7 +12,6 @@ module tb ();
     reg        clk;
     reg        rst_n;
 
-    // Instantiate the DUT
     tt_um_freq_counter user_project (
         .ui_in   (ui_in),
         .uo_out  (uo_out),
