@@ -12,25 +12,30 @@ module tt_um_freq_counter (
 );
 
     // ============================================================
-    // INPUTS AND OUTPUTS
+    // INPUT
     // ============================================================
     wire signal_in = ui_in[0];  // Frequency signal goes to pin 0
 
     // ============================================================
-    // PRESCALER: Divide input by 100
+    // EDGE DETECTOR + PRESCALER (divide by 100)
     // ============================================================
-    reg [6:0] prescale_cnt;  // Counts 0 to 99 (7 bits = max 127)
-    reg       divided_pulse; // One pulse every 100 input pulses
+    reg       signal_prev;
+    reg [6:0] prescale_cnt;   // 0 to 99
+    reg       divided_pulse;  // One pulse every 100 rising edges
 
     always @(posedge clk) begin
         if (!rst_n) begin
+            signal_prev   <= 0;
             prescale_cnt  <= 0;
             divided_pulse <= 0;
         end else begin
-            if (signal_in) begin  // Only count on high pulses
+            signal_prev <= signal_in;
+
+            // Detect rising edge of input
+            if (signal_in && !signal_prev) begin
                 if (prescale_cnt == 99) begin
                     prescale_cnt  <= 0;
-                    divided_pulse <= 1;  // Send one pulse
+                    divided_pulse <= 1;
                 end else begin
                     prescale_cnt  <= prescale_cnt + 1;
                     divided_pulse <= 0;
@@ -44,12 +49,12 @@ module tt_um_freq_counter (
     // ============================================================
     // REFERENCE TIMER: 1 millisecond window
     // ============================================================
-    // 50 MHz clock = 50,000,000 cycles per second
+    // 50 MHz clock = 50,000,000 cycles/second
     // 1 millisecond = 50,000 cycles
     localparam WINDOW_CYCLES = 50_000;
 
-    reg [15:0] window_cnt;   // 16 bits can count up to 65,535
-    reg        window_open;  // 1 = counting, 0 = resetting
+    reg [15:0] window_cnt;    // 16 bits (max 65,535)
+    reg        window_open;   // 1 = counting, 0 = latching
 
     always @(posedge clk) begin
         if (!rst_n) begin
@@ -58,7 +63,7 @@ module tt_um_freq_counter (
         end else begin
             if (window_cnt == WINDOW_CYCLES - 1) begin
                 window_cnt  <= 0;
-                window_open <= ~window_open;  // Toggle every 1 ms
+                window_open <= ~window_open;
             end else begin
                 window_cnt <= window_cnt + 1;
             end
@@ -66,10 +71,10 @@ module tt_um_freq_counter (
     end
 
     // ============================================================
-    // FREQUENCY COUNTER: Count divided pulses during window
+    // FREQUENCY COUNTER
     // ============================================================
-    reg [7:0] freq_count;    // 8-bit output
-    reg [7:0] freq_latched;  // Stable output
+    reg [7:0] freq_count;     // Running count
+    reg [7:0] freq_latched;   // Stable output
 
     always @(posedge clk) begin
         if (!rst_n) begin
@@ -77,11 +82,9 @@ module tt_um_freq_counter (
             freq_latched <= 0;
         end else begin
             if (window_open) begin
-                // Window is open: count pulses
                 if (divided_pulse)
                     freq_count <= freq_count + 1;
             end else begin
-                // Window closed: latch result and reset counter
                 freq_latched <= freq_count;
                 freq_count   <= 0;
             end
@@ -92,10 +95,10 @@ module tt_um_freq_counter (
     // OUTPUT ASSIGNMENT
     // ============================================================
     assign uo_out  = freq_latched;
-    assign uio_out = 8'b0;    // Unused
-    assign uio_oe  = 8'b0;    // All IOs are inputs
+    assign uio_out = 8'b0;
+    assign uio_oe  = 8'b0;
 
-    // Prevent warnings for unused signals
+    // Prevent unused signal warnings
     wire _unused = &{ena, ui_in[7:1], uio_in, 1'b0};
 
 endmodule
