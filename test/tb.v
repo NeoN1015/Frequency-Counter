@@ -3,7 +3,6 @@
 
 module tb ();
 
-    // Dump VCD waveform file for debugging
     initial begin
         $dumpfile("tb.vcd");
         $dumpvars(0, tb);
@@ -19,7 +18,16 @@ module tb ();
     reg        clk;
     reg        rst_n;
 
+`ifdef GL_TEST
+    wire VPWR = 1'b1;
+    wire VGND = 1'b0;
+`endif
+
     tt_um_freq_counter user_project (
+`ifdef GL_TEST
+        .VPWR    (VPWR),
+        .VGND    (VGND),
+`endif
         .ui_in   (ui_in),
         .uo_out  (uo_out),
         .uio_in  (uio_in),
