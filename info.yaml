@@ -1,6 +1,7 @@
 yaml_version: 6
 
 project:
+  wokwi_id: 457571552620255233
   title: "Frequency Counter"
   author: "ESPLANA GERALD CARINGAL"
   discord: "just.neon15"
