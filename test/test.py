@@ -19,24 +19,28 @@ async def test_freq_counter_1mhz(dut):
     clock = Clock(dut.clk, 20, unit="ns")
     cocotb.start_soon(clock.start())
 
-    # 2. Initial Setup & Reset
+    # 2. Initialize inputs to valid binary logic (0 instead of X)
     dut.ena.value = 1
     dut.ui_in.value = 0
     dut.uio_in.value = 0
+    
+    # 3. Assert Reset for 50 full clock cycles to clear all GL gate-level 'X' states
     dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
+    await ClockCycles(dut.clk, 50)
     dut.rst_n.value = 1
     await ClockCycles(dut.clk, 10)
 
-    # 3. Start 1 MHz Signal Generator Task (1,000 ns period)
+    # 4. Start 1 MHz Signal Generator Task (1,000 ns period)
     cocotb.start_soon(drive_signal(dut, period_ns=1000))
 
-    # 4. Wait for 2 full gate windows (100,000 clock cycles = 2 ms)
-    # This guarantees at least one complete 1 ms sampling window finishes.
+    # 5. Wait for 2 full gate windows (100,000 clock cycles = 2 ms)
     await ClockCycles(dut.clk, 100_000)
 
-    # 5. Read Output
-    result = int(dut.uo_out.value)
+    # 6. Resolve value safely (check if uo_out contains 'x' or 'z' before converting)
+    raw_val = dut.uo_out.value
+    assert raw_val.is_resolvable, f"Output contains unknown/unresolved logic values: {raw_val}"
+
+    result = int(raw_val)
     dut._log.info(f"Frequency counter output = {result}")
 
     # 1 MHz inside a 1 ms gate divided by 100 prescaler = 10 counts
