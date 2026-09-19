@@ -3,6 +3,13 @@
 
 module tb ();
 
+    // Dump VCD waveform file for debugging
+    initial begin
+        $dumpfile("tb.vcd");
+        $dumpvars(0, tb);
+        #1;
+    end
+
     reg  [7:0] ui_in;
     wire [7:0] uo_out;
     reg  [7:0] uio_in;
