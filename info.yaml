@@ -1,7 +1,7 @@
 yaml_version: 6
 
 project:
-  title: "My Frequency Counter"
+  title: "Frequency Counter"
   author: "ESPLANA GERALD CARINGAL"
   discord: "just.neon15"
   description: "Measures input frequency with a 1 ms gate and /100 prescaler"
