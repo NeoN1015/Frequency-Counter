@@ -13,26 +13,5 @@ A digital frequency counter that measures the frequency of a signal on `ui_in[0]
 
 - Connect your signal to `ui_in[0]`.
 - Read the 8-bit result from `uo_out[7:0]`.
-- Frequency in Hz = displayed value × 100 / 0.001 = displayed value × 100,000.
 
-### Example
-
-| Input Frequency | Displayed Value |
-|-----------------|-----------------|
-| 1 MHz           | 10              |
-| 500 kHz         | 5               |
-| 2 MHz           | 20              |
-
-## Pinout
-
-| Pin | Name | Direction | Description |
-|-----|------|-----------|-------------|
-| ui_in[0] | signal_in | Input | Signal to measure |
-| uo_out[7:0] | freq_bit[7:0] | Output | Frequency result |
-
-## Parameters
-
-- System clock: 50 MHz
-- Gate window: 1 ms
-- Prescaler: ÷100
-- Resolution: 100 kHz per bit step
+## Calculation
