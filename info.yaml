@@ -9,7 +9,6 @@ project:
   clock_hz: 25000000
   tiles: "1x1"
   top_module: "tt_um_freq_counter"
-  wokwi_id: 457571552620255233
   source_files:
     - "project.v"
 
@@ -35,11 +34,6 @@ pinout:
   uio[0]: "unused"
   uio[1]: "unused"
   uio[2]: "unused"
-  uio[3]: "unused"
-  uio[4]: "unused"
-  uio[5]: "unused"
-  uio[6]: "unused"
-  uio[7]: "unused"  uio[2]: "unused"
   uio[3]: "unused"
   uio[4]: "unused"
   uio[5]: "unused"
