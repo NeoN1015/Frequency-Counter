@@ -1,18 +1,17 @@
 yaml_version: 6
 
 project:
-  wokwi_id: 0
+  wokwi_id: 457571552620255233
   title: "Frequency Counter"
   author: "ESPLANA GERALD CARINGAL"
   discord: "just.neon15"
-  description: "Measures input frequency with 1 ms gate and /100 prescaler, displayed via VGA"
+  description: "Measures input frequency with 1 ms gate and /100 prescaler"
   language: "Verilog"
-  clock_hz: 25175000
+  clock_hz: 50000000
   tiles: "1x1"
   top_module: "tt_um_freq_counter"
   source_files:
     - "project.v"
-    - "hvsync_generator.v"
 
 pinout:
   ui[0]: "signal_in"
@@ -24,14 +23,14 @@ pinout:
   ui[6]: "unused"
   ui[7]: "unused"
 
-  uo[0]: "R1 (VGA red bit 1)"
-  uo[1]: "G1 (VGA green bit 1)"
-  uo[2]: "B1 (VGA blue bit 1)"
-  uo[3]: "vsync"
-  uo[4]: "R0 (VGA red bit 0)"
-  uo[5]: "G0 (VGA green bit 0)"
-  uo[6]: "B0 (VGA blue bit 0)"
-  uo[7]: "hsync"
+  uo[0]: "freq_bit0"
+  uo[1]: "freq_bit1"
+  uo[2]: "freq_bit2"
+  uo[3]: "freq_bit3"
+  uo[4]: "freq_bit4"
+  uo[5]: "freq_bit5"
+  uo[6]: "freq_bit6"
+  uo[7]: "freq_bit7"
 
   uio[0]: "unused"
   uio[1]: "unused"
